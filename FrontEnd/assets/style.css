@@ -95,7 +95,16 @@ nav li {
 	font-size: 1.2em;
 }
 
-li:hover {
+nav li a {
+	text-decoration: none;
+	color: black;
+	cursor: text;
+}
+
+
+
+
+li:hover, li a:hover {
 	color: #B1663C;
 }
 #introduction {
@@ -155,7 +164,7 @@ margin: auto;
 	flex-direction: column;
 }
 
-#contact input {
+#contact input, .add-picture, .validate-picture {
 	height: 50px;
 	font-size: 1.2em;
 	border: none;
@@ -169,7 +178,7 @@ margin: auto;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
-input[type="submit"]{
+input[type="submit"], input[type="button"], .add-picture {
 	font-family: 'Syne';
 	font-weight: 700;
 	color: white;
@@ -184,5 +193,210 @@ footer nav ul {
 	display: flex;
 	justify-content: flex-end;
 	margin: 2em
+}
+
+
+/* filter button */
+.filter {
+	display: flex;
+	justify-content: center;
+	margin: 40px 0;
+}
+
+.filter-btn {
+	font-family: 'Syne';
+	color: #1D6154;
+	background-color: white;
+	padding: 8px;
+	margin: 0 5px;
+	border-radius: 20px;
+	border: 1px solid #1D6154;
+}
+
+
+.filter-btn:hover {
+	background-color: #1D6154;
+	color: white;
+}	
+
+
+/* mot de passe oublié */
+
+.password-forgot {
+	background: none;
+	border: none;
+	text-decoration: underline;
+}
+
+/* mot de passe incorrect */
+
+.error {
+	color: #D65353;
+	font-size: 20px;
+	font-weight: bold;
+	padding-top: 20px;
+}
+
+/* modal */
+
+.modal {
+  display: none;
+  position: fixed; 
+  z-index: 1; 
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%); /*décale la modale de moitié de sa largeur et de moitié de sa hauteur pour la centrer  */
+  width: 750px; 
+  height: 850px; 
+  background-color: white; 
+  border-radius: 10px;
+}
+
+
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 50px 120px 20px;
+    /* width: 80%; */
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+	/* display: flex;
+	flex-wrap: wrap; */
+}
+
+.modal-content > figure {
+	display: inline-block;
+	margin-right: 15px;
+}
+
+
+.modal-header p {
+	margin-top: 85px;
+	text-align: center; 
+	font-size: 30px;
+	font-family: work sans;
+}
+
+.close {
+	color: black;
+	margin: 35px;
+    font-size: 28px;
+    font-weight: bold;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+  }
+
+.picture-modal {
+	width: 87px!important;
+	margin: 0!important;
+	border-radius: 3px;
+}
+
+.figcaption-modal {
+	margin: 5px 0 10px 0;
+}
+
+.modal-footer {
+	position: absolute;
+	bottom: 30px;
+	left: 90px;
+}
+
+.add-picture {
+	width: 270px;
+}
+
+.delete-picture {
+	margin: 30px auto;
+	border: none;
+	background-color: white;
+	color: #D65353;
+	font-family: 'Work Sans';
+	font-weight: 400;
+	font-size: 17px;
+}
+
+.modal-hr {
+	margin: 20px auto 50px;
+	border: 0;
+    height: 1px;
+	width: 560px;
+	background-color: #B3B3B3;
+}
+
+
+.modify {
+	border: none;
+	background-color: white;
+
+}
+
+
+.button-modif-1 {
+	margin-bottom: 20px;
+}
+
+
+.button-modif-2 {
+	position: relative;
+	top: -52px;
+	left: 690px;
+}
+
+.button-modif-3 {
+	position: relative;
+	top: 20px;
+	left: 50px;
+}
+
+
+.picture-delete {
+	border: none;
+	background-color: white;
+	border-radius: 3px;
+	background-color: black;
+}
+
+.fa-trash-can {
+	color: white;
+	padding: 4px 0;
+}
+
+
+
+/* modale add picture */
+
+.form-download {
+	display: flex;
+	flex-direction: column;
+	width: 70%;
+	margin: 60px auto;
+}
+
+.imgDiv {
+	background: #E8F1F6;
+	width: 100%;
+	height: 169px;
+	margin-bottom: 50px;
+}
+
+
+#input-name, #select-category {
+	width: 100%;
+	height: 51px;
+	font-size: 18px;
+	border: none;
+	border-radius: 5px;
+	margin-top: 10px;
+	margin-bottom: 50px;
+	box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.2);
+}
+
+
+.validate-picture {
+	width: 270px!important;	
+	background-color: #A7A7A7!important;
 }
 
