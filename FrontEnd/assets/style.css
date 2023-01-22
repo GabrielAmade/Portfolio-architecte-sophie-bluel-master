@@ -375,12 +375,42 @@ footer nav ul {
 	margin: 60px auto;
 }
 
+
 .imgDiv {
+	position: relative;
 	background: #E8F1F6;
 	width: 100%;
 	height: 169px;
 	margin-bottom: 50px;
 }
+
+.custom-button, .custom-text, .custom-icon {
+	position: absolute; /* positionne les éléments en absolu par rapport à la div parent */
+	left: 50%; /* aligne horizontalement au milieu */
+	transform: translateX(-50%); /* décale l'élément de sa moitié vers la gauche pour qu'il soit centré */
+}
+
+.custom-button {
+	background-color: #CBD6DC;
+    color: #306685;
+    padding: 10px 20px;
+	border-radius: 50px;
+	border: none;
+	bottom: 40px; /* place l'élément en bas de la div parent */
+}
+
+.custom-text {
+	font-size: 10px;
+	color: #444444;
+	bottom: 10px; /* place l'élément en bas de la div parent */
+}
+
+.custom-icon {	
+	bottom: 80px;
+	color: #B9C5CC;
+	font-size: 60px;
+}
+
 
 
 #input-name, #select-category {

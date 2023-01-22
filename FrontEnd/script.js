@@ -203,11 +203,41 @@ btn.addEventListener("click", function(){
                        // Champ image
                         let inputImage = document.createElement("input");
                         inputImage.setAttribute("type", "file");
-                        inputImage.setAttribute("value", "Choisir une image");
                         inputImage.setAttribute("accept", "image/*");
-                        inputImage.setAttribute("class", "img-download");
+                        inputImage.style.display = "none";
+
+                        let button = document.createElement("button");
+                        button.innerHTML = "+ Ajouter photo";
+                        button.setAttribute("class", "custom-button");
+
+                        button.addEventListener("click", function(e){
+                            e.preventDefault();
+                            inputImage.click();
+                        });
+
+                        let icon = document.createElement("i");
+                        icon.setAttribute("class", "fa-regular fa-image custom-icon");
+                        let img = document.createElement("img");
+                        img.setAttribute("class", "test")
+                        img.src = icon.classList;
+                        //img.style.cssText = "width:50px; height:50px;";
+
+
+
+                        let text = document.createElement("p");
+                        text.innerHTML = "jpg, png : 4mo max";
+                        text.setAttribute("class", "custom-text");
+
+                        
+
+                        
+                        
+                        
                         
                         imgDiv.appendChild(inputImage);
+                        imgDiv.appendChild(button);
+                        imgDiv.appendChild(text);
+                        imgDiv.appendChild(icon);
                         form.appendChild(imgDiv);
                        
                         // Champ nom
