@@ -218,7 +218,6 @@ btn.addEventListener("click", function(){
                         let icon = document.createElement("i");
                         icon.setAttribute("class", "fa-regular fa-image custom-icon");
                         let img = document.createElement("img");
-                        img.setAttribute("class", "test")
                         img.src = icon.classList;
                         //img.style.cssText = "width:50px; height:50px;";
 
@@ -238,6 +237,23 @@ btn.addEventListener("click", function(){
                         imgDiv.appendChild(button);
                         imgDiv.appendChild(text);
                         imgDiv.appendChild(icon);
+
+                        inputImage.addEventListener("change", function(){
+                            let file = this.files[0];
+                            let reader = new FileReader();
+                            reader.onload = function(e){
+                                img.src = e.target.result;
+                                img.className = "img-preview";
+                                button.style.display = "none";
+                                text.style.display = "none";
+                                icon.style.display = "none";
+                            }
+                            reader.readAsDataURL(file);
+                            imgDiv.appendChild(img);
+                        });
+
+
+
                         form.appendChild(imgDiv);
                        
                         // Champ nom
@@ -334,6 +350,7 @@ btn.addEventListener("click", function(){
                         formData.append('title', title);
                         formData.append('category', category);
                       
+                       
                         
                         let options = {
                           method: "POST",
@@ -372,7 +389,15 @@ btn.addEventListener("click", function(){
 
                             gallery.append(figureData);
 
-                            modalContent.innerHTML = "";
+
+
+                            modalContent.innerHTML = ""; //supprimer tout le contenu de la modal pour faire un fetch au click
+                            imgDiv.removeChild(img); // supprimer l'image chargée
+                            button.style.display = "block";
+                            text.style.display = "block";
+                            icon.style.display = "block";
+                            inputName.value = "";
+                            selectCategory.value = "";
                             
                             
                             

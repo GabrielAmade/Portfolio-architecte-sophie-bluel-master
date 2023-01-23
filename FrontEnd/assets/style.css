@@ -411,6 +411,11 @@ footer nav ul {
 	font-size: 60px;
 }
 
+.img-preview {
+    /* object-fit: contain!important;
+    object-position: center!important; */
+	width: 125px!important;
+}
 
 
 #input-name, #select-category {
