@@ -5,6 +5,8 @@ const email = document.querySelector("#email");
 const password = document.querySelector("#password");
 
 
+
+
 btnSubmit.addEventListener("click", function(){
 
         
@@ -27,18 +29,24 @@ btnSubmit.addEventListener("click", function(){
                 console.log(res);
                 if (res.ok){
                     window.location.href = 'http://127.0.0.1:5501/index.html'
+                   
                 } else {
                     error.textContent = "Erreur dans l’identifiant ou le mot de passe"
                 }
                 return res.json();
-
+                
             })
             //.then(data => console.log(data.token))
             .then(data => {
-               let token = data.token
-               localStorage.setItem("SavedToken", JSON.stringify(token));             
+                let token = data.token
+                localStorage.setItem("SavedToken", JSON.stringify(token));    
+                          
             })
             
             .catch(err => console.log("erreur"))
-               
-})
+            
+        })
+
+        
+   
+

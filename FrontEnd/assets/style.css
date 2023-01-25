@@ -258,11 +258,8 @@ footer nav ul {
     background-color: #fefefe;
     margin: auto;
     padding: 50px 120px 20px;
-    /* width: 80%; */
     animation-name: animatetop;
     animation-duration: 0.4s;
-	/* display: flex;
-	flex-wrap: wrap; */
 }
 
 .modal-content > figure {
@@ -330,12 +327,13 @@ footer nav ul {
 .modify {
 	border: none;
 	background-color: white;
-
 }
 
 
 .button-modif-1 {
 	margin-bottom: 20px;
+	display: none;
+
 }
 
 
@@ -343,12 +341,16 @@ footer nav ul {
 	position: relative;
 	top: -52px;
 	left: 690px;
+	display: none;
+
 }
 
 .button-modif-3 {
 	position: relative;
 	top: 20px;
 	left: 50px;
+	display: none;
+
 }
 
 
@@ -434,4 +436,42 @@ footer nav ul {
 	width: 270px!important;	
 	background-color: #A7A7A7!important;
 }
+
+
+
+
+/* Barre d'édition */
+
+.edition-bar {
+	position: absolute;
+	background-color: black;
+	height: 50px;
+	top: 0;
+	left: 0;
+	right: 0;
+	text-align: center;
+	width: 100%;
+	display: none;
+}
+
+.edition-bar > button {
+	background: none;
+	border: none;
+	color: white;
+	margin-top: 6px;
+}
+
+.edition-bar > input {
+	color: black;
+	padding: 11px;
+	border-radius: 40px;
+	border: none;
+	width: 160px;
+	text-align: center;
+	margin-top: 6px;
+
+}
+
+
+
 

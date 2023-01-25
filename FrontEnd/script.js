@@ -61,7 +61,15 @@ const filterBtns = document.querySelectorAll(".filter-btn");
                 
         .catch(error => console.log(error))
     
-                   
+  
+        
+
+
+
+
+
+
+
 // afficher la fenêtre modale
 
 let modal = document.querySelector("#myModal");
@@ -134,6 +142,9 @@ btn.addEventListener("click", function(){
 
 
 
+
+
+
                 // DELETE
                 pictureDelete.addEventListener("click", function(event){
                     let getToken = localStorage.getItem('SavedToken');
@@ -158,15 +169,8 @@ btn.addEventListener("click", function(){
                                 let modalFigure = document.querySelector(`figure[id="${id}"]`);
                                 modalFigure.remove();
                                 let figure = parent.document.querySelector(`figure[id="${id}"]`);
-
                                 figure.remove();
-
-                                // for (let i = 0; i < figure.length; i++) {
-                                //     if (figure[i].getAttribute("id") === id) {
-                                //         figure[i].remove();
-                                //     }
-                                // }
-                              
+                          
                             } else {
                                 throw new Error('Erreur');
                             }
@@ -176,6 +180,12 @@ btn.addEventListener("click", function(){
                             console.error(error);
                         });
                     });
+
+
+
+
+
+
 
 
                     //Création du formulaire pour poster une image
@@ -203,6 +213,7 @@ btn.addEventListener("click", function(){
                        // Champ image
                         let inputImage = document.createElement("input");
                         inputImage.setAttribute("type", "file");
+                        inputImage.setAttribute("required", "required");
                         inputImage.setAttribute("accept", "image/*");
                         inputImage.style.display = "none";
 
@@ -219,7 +230,6 @@ btn.addEventListener("click", function(){
                         icon.setAttribute("class", "fa-regular fa-image custom-icon");
                         let img = document.createElement("img");
                         img.src = icon.classList;
-                        //img.style.cssText = "width:50px; height:50px;";
 
 
 
@@ -227,12 +237,7 @@ btn.addEventListener("click", function(){
                         text.innerHTML = "jpg, png : 4mo max";
                         text.setAttribute("class", "custom-text");
 
-                        
-
-                        
-                        
-                        
-                        
+                    
                         imgDiv.appendChild(inputImage);
                         imgDiv.appendChild(button);
                         imgDiv.appendChild(text);
@@ -253,7 +258,6 @@ btn.addEventListener("click", function(){
                         });
 
 
-
                         form.appendChild(imgDiv);
                        
                         // Champ nom
@@ -265,6 +269,7 @@ btn.addEventListener("click", function(){
                         let inputName = document.createElement("input");
                         inputName.setAttribute("type", "text");
                         inputName.setAttribute("name", "name");
+                        inputName.setAttribute("required", "required");
                         inputName.setAttribute("id", "input-name");
                         form.appendChild(inputName);
 
@@ -277,6 +282,7 @@ btn.addEventListener("click", function(){
                         let selectCategory = document.createElement("select");
                         selectCategory.setAttribute("name", "category");
                         selectCategory.setAttribute("id", "select-category");
+                        selectCategory.setAttribute("required", "required");
                         form.appendChild(selectCategory);
 
                         // Options pour le select
@@ -314,6 +320,32 @@ btn.addEventListener("click", function(){
                         modalContentAdd.appendChild(form);
                         modal.appendChild(modalContentAdd);
 
+
+                        
+
+
+
+                        // MODIFIER LA COULEUR DU BOUTON VALIDÉ SI LES CHAMPS SONT REMPLIS
+                        
+                        let fileInputTest = document.querySelector('input[type=file]');
+                        let titleTest = document.querySelector('input[name=name]');
+                        let categoryTest = document.querySelector('select[name=category]');
+                        let submitButton = document.querySelector(".validate-picture")
+                                                
+                        fileInputTest.addEventListener("change", checkForm);
+                        titleTest.addEventListener("input", checkForm);
+                        categoryTest.addEventListener("change", checkForm);
+
+                        function checkForm() {
+                            // Vérification si tous les champs requis sont remplis
+                            if (titleTest.value !== "" && categoryTest.value !== "" && fileInputTest.value !== "") {
+                                // Changement de la couleur du bouton de validation
+                                submitButton.style.backgroundColor = "green";
+                            } else {
+                                submitButton.style.backgroundColor = "initial";
+                            }
+                        }
+
                         
                         // REQUETE POST
 
@@ -326,20 +358,25 @@ btn.addEventListener("click", function(){
                         let file = fileInput.files[0];
                         let title = document.querySelector('input[name=name]').value;
                         let category = document.querySelector('select[name=category]').value;
-                      
+
                         // Valider les inputs
                         if (!file) {
                           alert("Sélectionnez une image");
                           return;
-                        }
-                        if (!title) {
-                          alert("Entrez un titre");
-                          return;
-                        }
-                        if (!category) {
-                          alert("Sélectionnez une catégorie");
-                          return;
-                        }
+                        } else if (!title) {
+                            alert("Entrez un titre");
+                            return;
+                        } else if (!category) {
+                            alert("Sélectionnez une catégorie");
+                            return;
+                        } 
+                        
+                        
+                        
+
+                        
+
+                       
                       
                         // Récupérer le token
                         let getToken = localStorage.getItem('SavedToken');
@@ -350,6 +387,7 @@ btn.addEventListener("click", function(){
                         formData.append('title', title);
                         formData.append('category', category);
                       
+                        
                        
                         
                         let options = {
@@ -388,6 +426,7 @@ btn.addEventListener("click", function(){
                             figureData.append(figcaptionData)
 
                             gallery.append(figureData);
+
 
 
 
@@ -439,8 +478,24 @@ window.addEventListener("click", (event) => {
 
   });
 
-  
 
+
+
+  
+const modify1 = document.querySelector(".button-modif-1");
+const modify2 = document.querySelector(".button-modif-2");
+const modify3 = document.querySelector(".button-modif-3");
+const editionBar = document.querySelector(".edition-bar")
+const header = document.querySelector("header")
+
+if(localStorage.getItem("SavedToken")){
+
+    modify1.style.display = "block";
+    modify2.style.display = "block";
+    modify3.style.display = "block";
+    editionBar.style.display = "block";
+    header.style.marginTop = "70px"
+}
 
 
 
