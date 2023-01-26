@@ -75,7 +75,7 @@ const filterBtns = document.querySelectorAll(".filter-btn");
 let modal = document.querySelector("#myModal");
 let modalContent = document.querySelector(".modal-content");
 let modalContentAdd = document.querySelector(".modal-content-2")
-let modaleHeader = document.querySelector(".modal-header")
+let modalHeader = document.querySelector(".modal-header")
 let btn = document.querySelector("#myBtn");
 let span = document.querySelector(".close");
 let addPicture = document.querySelector(".add-picture")
@@ -85,7 +85,7 @@ let hr = document.querySelector(".modal-hr")
 btn.addEventListener("click", function(){
 
     modal.style.display = "block";
-    modaleHeader.innerHTML = "<p>Galerie photo</p>"
+    modalHeader.innerHTML = "<p>Galerie photo</p>"
     modalContentAdd.style.display = "none";
     addPicture.style.display = "block";
     deletePicture.style.display = "block";
@@ -197,7 +197,7 @@ btn.addEventListener("click", function(){
                         addPicture.style.display = "none";
                         deletePicture.style.display = "none";
                         hr.style.display = "none";
-                        modaleHeader.innerHTML = "<p>Ajout photo</p>"
+                        modalHeader.innerHTML = "<p>Ajout photo</p>"
                         
                         if (!modalContentAdd.contains(document.querySelector("form"))) {
 
@@ -243,6 +243,7 @@ btn.addEventListener("click", function(){
                         imgDiv.appendChild(text);
                         imgDiv.appendChild(icon);
 
+                        // preview image 
                         inputImage.addEventListener("change", function(){
                             let file = this.files[0];
                             let reader = new FileReader();
@@ -314,37 +315,42 @@ btn.addEventListener("click", function(){
                         let inputSubmit = document.createElement("input");
                         inputSubmit.setAttribute("type", "submit");
                         inputSubmit.setAttribute("value", "Valider");
-                        inputSubmit.setAttribute("class", "validate-picture");
+                        inputSubmit.setAttribute("class", "validate-picture validate-picture-background");
+                        // inputSubmit.style.backgroundColor = "red";
+
+
                         form.appendChild(inputSubmit);
 
                         modalContentAdd.appendChild(form);
                         modal.appendChild(modalContentAdd);
 
-
                         
 
+                       
+                        // Changer la couleur du bouton quand les champs sont remplis
 
+                        let inputImageTest = document.querySelector("input[type='file']");
+                        let inputNameTest = document.querySelector("input[name='name']");
+                        let selectCategoryTest = document.querySelector("select[name='category']");
+                        inputImageTest.addEventListener("change", checkInputs);
+                        inputNameTest.addEventListener("keyup", checkInputs);
+                        selectCategoryTest.addEventListener("change", checkInputs);
 
-                        // MODIFIER LA COULEUR DU BOUTON VALIDÉ SI LES CHAMPS SONT REMPLIS
-                        
-                        let fileInputTest = document.querySelector('input[type=file]');
-                        let titleTest = document.querySelector('input[name=name]');
-                        let categoryTest = document.querySelector('select[name=category]');
-                        let submitButton = document.querySelector(".validate-picture")
-                                                
-                        fileInputTest.addEventListener("change", checkForm);
-                        titleTest.addEventListener("input", checkForm);
-                        categoryTest.addEventListener("change", checkForm);
-
-                        function checkForm() {
-                            // Vérification si tous les champs requis sont remplis
-                            if (titleTest.value !== "" && categoryTest.value !== "" && fileInputTest.value !== "") {
-                                // Changement de la couleur du bouton de validation
-                                submitButton.style.backgroundColor = "green";
+                        function checkInputs() {
+                            if (inputImageTest.value && inputNameTest.value && (selectCategoryTest.value == "1" || selectCategoryTest.value == "2" || selectCategoryTest.value == "3")) {
+                                inputSubmit.classList.remove("validate-picture-background")
+                                inputSubmit.style.backgroundColor = "#1D6154";
                             } else {
-                                submitButton.style.backgroundColor = "initial";
+                                inputSubmit.style.backgroundColor = "#A7A7A7";
                             }
                         }
+
+
+
+
+
+
+
 
                         
                         // REQUETE POST
@@ -496,7 +502,5 @@ if(localStorage.getItem("SavedToken")){
     editionBar.style.display = "block";
     header.style.marginTop = "70px"
 }
-
-
 
 

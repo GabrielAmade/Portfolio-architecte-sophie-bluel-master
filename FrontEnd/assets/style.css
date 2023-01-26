@@ -200,7 +200,7 @@ footer nav ul {
 .filter {
 	display: flex;
 	justify-content: center;
-	margin: 40px 0;
+	margin-bottom: 40px;
 }
 
 .filter-btn {
@@ -247,7 +247,6 @@ footer nav ul {
   top: 50%;
   transform: translate(-50%, -50%); /*décale la modale de moitié de sa largeur et de moitié de sa hauteur pour la centrer  */
   width: 750px; 
-  height: 850px; 
   background-color: white; 
   border-radius: 10px;
 }
@@ -257,6 +256,7 @@ footer nav ul {
     position: relative;
     background-color: #fefefe;
     margin: auto;
+    margin-bottom: 20px;
     padding: 50px 120px 20px;
     animation-name: animatetop;
     animation-duration: 0.4s;
@@ -296,9 +296,10 @@ footer nav ul {
 }
 
 .modal-footer {
-	position: absolute;
-	bottom: 30px;
-	left: 90px;
+	display: flex;
+	flex-direction: column;
+	justify-content: end;
+	align-items: center;
 }
 
 .add-picture {
@@ -306,7 +307,8 @@ footer nav ul {
 }
 
 .delete-picture {
-	margin: 30px auto;
+	margin: auto;
+	margin-bottom: 30px;
 	border: none;
 	background-color: white;
 	color: #D65353;
@@ -316,7 +318,7 @@ footer nav ul {
 }
 
 .modal-hr {
-	margin: 20px auto 50px;
+	margin: 20px auto 20px;
 	border: 0;
     height: 1px;
 	width: 560px;
@@ -432,8 +434,8 @@ footer nav ul {
 }
 
 
-.validate-picture {
-	width: 270px!important;	
+.validate-picture-background {
+	/* width: 270px!important;	 */
 	background-color: #A7A7A7!important;
 }
 

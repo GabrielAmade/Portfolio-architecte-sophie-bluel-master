@@ -36,7 +36,6 @@ btnSubmit.addEventListener("click", function(){
                 return res.json();
                 
             })
-            //.then(data => console.log(data.token))
             .then(data => {
                 let token = data.token
                 localStorage.setItem("SavedToken", JSON.stringify(token));    
