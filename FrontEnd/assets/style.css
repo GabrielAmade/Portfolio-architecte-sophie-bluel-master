@@ -220,7 +220,7 @@ footer nav ul {
 }	
 
 
-/* mot de passe oublié */
+/* forgotten password */
 
 .password-forgot {
 	background: none;
@@ -228,7 +228,7 @@ footer nav ul {
 	text-decoration: underline;
 }
 
-/* mot de passe incorrect */
+/* incorrect password */
 
 .error {
 	color: #D65353;
@@ -245,7 +245,7 @@ footer nav ul {
   z-index: 1; 
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%); /*décale la modale de moitié de sa largeur et de moitié de sa hauteur pour la centrer  */
+  transform: translate(-50%, -50%); 
   width: 750px; 
   background-color: white; 
   border-radius: 10px;
@@ -380,7 +380,7 @@ footer nav ul {
 }
 
 
-.imgDiv {
+.imgForm {
 	position: relative;
 	background: #E8F1F6;
 	width: 100%;
@@ -442,7 +442,7 @@ footer nav ul {
 
 
 
-/* Barre d'édition */
+/* Editing bar */
 
 .edition-bar {
 	position: absolute;

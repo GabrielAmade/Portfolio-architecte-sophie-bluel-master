@@ -1,5 +1,5 @@
-// fetch api pour afficher les projets
 
+//Get request
 const url = "http://localhost:5678/api/works";
 const gallery = document.querySelector(".gallery");
 const filterBtns = document.querySelectorAll(".filter-btn");
@@ -16,141 +16,110 @@ const filterBtns = document.querySelectorAll(".filter-btn");
     
                 figure.setAttribute("id", project.id);
                 figure.setAttribute('data-category', `${project.categoryId}`);
-                
-                
+                               
                 let picture = document.createElement("img");
                 picture.src = project.imageUrl;
                 picture.setAttribute('alt', `${project.title}`);
                 picture.setAttribute('crossorigin', 'anonymous');
                 figure.append(picture)
-                // console.log(figure);
                 
                 let figcaption = document.createElement("figcaption");
                 figcaption.textContent = project.title
                 figure.append(figcaption)
-                // console.log(figure);
     
                 gallery.appendChild(figure);
 
-                
-                // Barre pour filtrer les projets 
-
-                filterBtns.forEach(function(btn) {
-
-                    btn.addEventListener("click", (e) => {
-                        const btnId = (e.target.dataset.id);
-                        //console.log(btnId); //me donne le data-id de mon bouton
-                        const figureId = figure.getAttribute("data-category")
-                        //console.log(figureId);
-                        
-                        if(btnId === figureId) {
-                            figure.style.display = "block";
-                        } else if (btnId === "0"){
-                            figure.style.display = "block";
-                        } else (
-                            figure.style.display = "none"
-                        )                                             
-                    })                  
-                }
-            )
-                
+                //Filter function
+                filterBar(figure)
+                                        
         }
-    )
-                
-})
-                
+    )               
+})               
         .catch(error => console.log(error))
+
+
+//Filter Buttons
+
+function filterBar(figure){
+    filterBtns.forEach(function(btn) {
+
+        btn.addEventListener("click", (e) => {
+            const btnId = (e.target.dataset.id);
+            //console.log(btnId); //me donne le data-id de mon bouton
+            const figureId = figure.getAttribute("data-category")
+            //console.log(figureId);                      
+            if(btnId === figureId) {
+                figure.style.display = "block";
+            } else if (btnId === "0"){
+                figure.style.display = "block";
+            } else (
+                figure.style.display = "none"
+            )                                             
+        })                  
+    }
+)}
     
   
-        
 
-
-
-
-
-
-
-// afficher la fenêtre modale
+// Modal
 
 let modal = document.querySelector("#myModal");
 let modalContent = document.querySelector(".modal-content");
 let modalContentAdd = document.querySelector(".modal-content-2")
 let modalHeader = document.querySelector(".modal-header")
-let btn = document.querySelector("#myBtn");
-let span = document.querySelector(".close");
+let btnModal = document.querySelector("#myBtn");
+let closeModal = document.querySelector(".close");
 let addPicture = document.querySelector(".add-picture")
 let deletePicture = document.querySelector(".delete-picture")
-let hr = document.querySelector(".modal-hr")
+let hrModal = document.querySelector(".modal-hr")
 
-btn.addEventListener("click", function(){
 
-    modal.style.display = "block";
-    modalHeader.innerHTML = "<p>Galerie photo</p>"
-    modalContentAdd.style.display = "none";
-    addPicture.style.display = "block";
-    deletePicture.style.display = "block";
-    hr.style.display = "block";
-    modalContent.style.display = "block";
+// let figure = function(project) {
+//     let figureModal = document.createElement("figure");   
+//     figureModal.setAttribute("id", project.id);
+//     figureModal.setAttribute('data-category', `${project.categoryId}`);
+// }
 
-     if (!modalContent.contains(document.querySelector(".picture-modal"))) {
-
-       
-        fetch(url)
-        .then(res => {
-            return res.json();
-        })
-        .then(data => {
-            data.forEach(project => {
-    
-                let figureModal = document.createElement("figure");
-    
+function figureCreate(modalContent, project){
+    let figureModal = document.createElement("figure");   
                 figureModal.setAttribute("id", project.id);
-
                 figureModal.setAttribute('data-category', `${project.categoryId}`);
-                             
+                
+                // create picture
                 let pictureModal = document.createElement("img");
                 pictureModal.src = project.imageUrl;
                 pictureModal.setAttribute('alt', `${project.title}`);
                 pictureModal.setAttribute('crossorigin', 'anonymous');
                 pictureModal.setAttribute("class", "picture-modal");
+               
                 figureModal.append(pictureModal);
 
+                // create delete button
                 let pictureDelete = document.createElement("button");
                 pictureDelete.setAttribute("class", "picture-delete")
 
-                let icon = document.createElement('i');
-                icon.classList.add('fa-regular', 'fa-trash-can');
+                //create trash icon
+                let iconTrash = document.createElement('i');
+                iconTrash.classList.add('fa-regular', 'fa-trash-can');
                 pictureDelete.style.position = 'relative';
                 pictureDelete.style.zIndex = '1';
                 pictureDelete.style.bottom = '105px';
                 pictureDelete.style.left = '58px';
-                pictureDelete.prepend(icon);
-
+                pictureDelete.prepend(iconTrash);
                 figureModal.append(pictureDelete);
 
-              
+                // create caption
                 let figcaptionModal = document.createElement("figcaption");
                 figcaptionModal.textContent = "éditer";
                 figcaptionModal.setAttribute("class", "figcaption-modal");
-
                 figureModal.append(figcaptionModal)
-                // console.log(figure);
-    
+               
                 modalContent.appendChild(figureModal);
 
-
-
-
-
-
-
-
-                // DELETE
-                pictureDelete.addEventListener("click", function(event){
+                pictureDelete.addEventListener("click", function(){
                     let getToken = localStorage.getItem('SavedToken');
                     let token = JSON.parse(getToken);
                     let id = this.parentElement.getAttribute("id");
-                    //let figure = document.getElementsByTagName("figure");
                     let urlDelete = `http://localhost:5678/api/works/${id}`;
 
                     let optionDelete = {
@@ -170,98 +139,186 @@ btn.addEventListener("click", function(){
                                 modalFigure.remove();
                                 let figure = parent.document.querySelector(`figure[id="${id}"]`);
                                 figure.remove();
-                          
+
                             } else {
                                 throw new Error('Erreur');
                             }
                         })
-                        
-                        .catch(error => {
+
+                       .catch(error => {
                             console.error(error);
                         });
-                    });
+                });
+}
 
 
 
 
+btnModal.addEventListener("click", function(){
+
+    modal.style.display = "block";
+    modalHeader.innerHTML = "<p>Galerie photo</p>"
+    modalContentAdd.style.display = "none";
+    addPicture.style.display = "block";
+    deletePicture.style.display = "block";
+    hrModal.style.display = "block";
+    modalContent.style.display = "block";
+
+    if (!modalContent.contains(document.querySelector(".picture-modal"))) {
+     
+        fetch(url)
+        .then(res => {
+            return res.json();
+        })
+        .then(data => {
+            data.forEach(project => {
+    
+                // create figure
+                // let figureModal = document.createElement("figure");   
+                // figureModal.setAttribute("id", project.id);
+                // figureModal.setAttribute('data-category', `${project.categoryId}`);
+                
+                // // create picture
+                // let pictureModal = document.createElement("img");
+                // pictureModal.src = project.imageUrl;
+                // pictureModal.setAttribute('alt', `${project.title}`);
+                // pictureModal.setAttribute('crossorigin', 'anonymous');
+                // pictureModal.setAttribute("class", "picture-modal");
+               
+                // figureModal.append(pictureModal);
+
+                // // create delete button
+                // let pictureDelete = document.createElement("button");
+                // pictureDelete.setAttribute("class", "picture-delete")
+
+                // //create trash icon
+                // let iconTrash = document.createElement('i');
+                // iconTrash.classList.add('fa-regular', 'fa-trash-can');
+                // pictureDelete.style.position = 'relative';
+                // pictureDelete.style.zIndex = '1';
+                // pictureDelete.style.bottom = '105px';
+                // pictureDelete.style.left = '58px';
+                // pictureDelete.prepend(iconTrash);
+                // figureModal.append(pictureDelete);
+
+                // // create caption
+                // let figcaptionModal = document.createElement("figcaption");
+                // figcaptionModal.textContent = "éditer";
+                // figcaptionModal.setAttribute("class", "figcaption-modal");
+                // figureModal.append(figcaptionModal)
+               
+                // modalContent.appendChild(figureModal);
+
+                figureCreate(modalContent, project);
 
 
+               // Delete request
+                // pictureDelete.addEventListener("click", function(){
+                //     let getToken = localStorage.getItem('SavedToken');
+                //     let token = JSON.parse(getToken);
+                //     let id = this.parentElement.getAttribute("id");
+                //     let urlDelete = `http://localhost:5678/api/works/${id}`;
+
+                //     let optionDelete = {
+                //         method: 'DELETE',
+                //         headers: {
+                //             'Content-Type': 'application/json',
+                //             'Accept': '*/*',
+                //             'Authorization': `Bearer ${token}`,
+                //         }
+                //         };
+
+                //         fetch(urlDelete, optionDelete)
+                //         .then(response => {
+                //             if (response.ok) {
+                                
+                //                 let modalFigure = document.querySelector(`figure[id="${id}"]`);
+                //                 modalFigure.remove();
+                //                 let figure = parent.document.querySelector(`figure[id="${id}"]`);
+                //                 figure.remove();
+
+                //             } else {
+                //                 throw new Error('Erreur');
+                //             }
+                //         })
+
+                //        .catch(error => {
+                //             console.error(error);
+                //         });
+                // });
 
 
-                    //Création du formulaire pour poster une image
+                //Post form
 
-                    addPicture.addEventListener("click", function(){    
+                addPicture.addEventListener("click", function(){    
 
-                        modalContent.style.display = "none";
-                        modalContentAdd.style.display = "block";
-                        addPicture.style.display = "none";
-                        deletePicture.style.display = "none";
-                        hr.style.display = "none";
-                        modalHeader.innerHTML = "<p>Ajout photo</p>"
-                        
-                        if (!modalContentAdd.contains(document.querySelector("form"))) {
-
+                    modalContent.style.display = "none";
+                    modalContentAdd.style.display = "block";
+                    addPicture.style.display = "none";
+                    deletePicture.style.display = "none";
+                    hrModal.style.display = "none";                  
+                    modalHeader.innerHTML = "<p>Ajout photo</p>"
+                    
+                    if (!modalContentAdd.contains(document.querySelector("form"))) {
 
                         let form = document.createElement("form");
                         form.setAttribute("action", "#");
                         form.setAttribute("method", "post");
                         form.setAttribute("class", "form-download");
 
-                        let imgDiv = document.createElement("div");
-                        imgDiv.setAttribute("class", "imgDiv");
+                        let imgForm = document.createElement("div");
+                        imgForm.setAttribute("class", "imgForm");
                         
-                       // Champ image
+                        // Picture file
                         let inputImage = document.createElement("input");
                         inputImage.setAttribute("type", "file");
-                        inputImage.setAttribute("required", "required");
                         inputImage.setAttribute("accept", "image/*");
                         inputImage.style.display = "none";
 
-                        let button = document.createElement("button");
-                        button.innerHTML = "+ Ajouter photo";
-                        button.setAttribute("class", "custom-button");
+                        let buttonImage = document.createElement("button");
+                        buttonImage.innerHTML = "+ Ajouter photo";
+                        buttonImage.setAttribute("class", "custom-button");
 
-                        button.addEventListener("click", function(e){
+
+                        buttonImage.addEventListener("click", function(e){
                             e.preventDefault();
                             inputImage.click();
                         });
 
-                        let icon = document.createElement("i");
-                        icon.setAttribute("class", "fa-regular fa-image custom-icon");
+                        let iconImage = document.createElement("i");
+                        iconImage.setAttribute("class", "fa-regular fa-image custom-icon");
                         let img = document.createElement("img");
-                        img.src = icon.classList;
+                        img.src = iconImage.classList;
 
-
-
-                        let text = document.createElement("p");
-                        text.innerHTML = "jpg, png : 4mo max";
-                        text.setAttribute("class", "custom-text");
-
+                        let textImage = document.createElement("p");
+                        textImage.innerHTML = "jpg, png : 4mo max";
+                        textImage.setAttribute("class", "custom-text");
                     
-                        imgDiv.appendChild(inputImage);
-                        imgDiv.appendChild(button);
-                        imgDiv.appendChild(text);
-                        imgDiv.appendChild(icon);
+                        imgForm.appendChild(inputImage);
+                        imgForm.appendChild(buttonImage);
+                        imgForm.appendChild(textImage);
+                        imgForm.appendChild(iconImage);
 
-                        // preview image 
+
+                        // Preview image 
                         inputImage.addEventListener("change", function(){
                             let file = this.files[0];
                             let reader = new FileReader();
                             reader.onload = function(e){
                                 img.src = e.target.result;
                                 img.className = "img-preview";
-                                button.style.display = "none";
-                                text.style.display = "none";
-                                icon.style.display = "none";
+                                buttonImage.style.display = "none";
+                                textImage.style.display = "none";
+                                iconImage.style.display = "none";
                             }
                             reader.readAsDataURL(file);
-                            imgDiv.appendChild(img);
+                            imgForm.appendChild(img);
                         });
 
 
-                        form.appendChild(imgDiv);
-                       
-                        // Champ nom
+                        form.appendChild(imgForm);
+                        
+                        // Name Input
                         let labelName = document.createElement("label");
                         labelName.innerHTML = "Titre";
                         labelName.setAttribute("for", "input-name");
@@ -270,11 +327,10 @@ btn.addEventListener("click", function(){
                         let inputName = document.createElement("input");
                         inputName.setAttribute("type", "text");
                         inputName.setAttribute("name", "name");
-                        inputName.setAttribute("required", "required");
                         inputName.setAttribute("id", "input-name");
                         form.appendChild(inputName);
 
-                        // Champ select
+                        // Select Category
                         let labelCategory = document.createElement("label");
                         labelCategory.innerHTML = "Catégorie";
                         labelCategory.setAttribute("for", "select-category");
@@ -283,10 +339,11 @@ btn.addEventListener("click", function(){
                         let selectCategory = document.createElement("select");
                         selectCategory.setAttribute("name", "category");
                         selectCategory.setAttribute("id", "select-category");
-                        selectCategory.setAttribute("required", "required");
                         form.appendChild(selectCategory);
 
-                        // Options pour le select
+
+
+                        // Select options
                         let option1 = document.createElement("option");
                         option1.setAttribute("value", "0");
                         option1.textContent = "";
@@ -307,28 +364,18 @@ btn.addEventListener("click", function(){
                         option4.textContent = "Hotels & restaurants";
                         selectCategory.appendChild(option4);
 
-                       
-
-                        
-
-                        // Bouton Envoyer
+                        // Submit Btn
                         let inputSubmit = document.createElement("input");
                         inputSubmit.setAttribute("type", "submit");
                         inputSubmit.setAttribute("value", "Valider");
                         inputSubmit.setAttribute("class", "validate-picture validate-picture-background");
-                        // inputSubmit.style.backgroundColor = "red";
-
 
                         form.appendChild(inputSubmit);
-
                         modalContentAdd.appendChild(form);
                         modal.appendChild(modalContentAdd);
-
+                  
                         
-
-                       
-                        // Changer la couleur du bouton quand les champs sont remplis
-
+                        // Change color of submit btn when inputs complete
                         let inputImageTest = document.querySelector("input[type='file']");
                         let inputNameTest = document.querySelector("input[name='name']");
                         let selectCategoryTest = document.querySelector("select[name='category']");
@@ -346,117 +393,93 @@ btn.addEventListener("click", function(){
                         }
 
 
-
-
-
-
-
-
-                        
-                        // REQUETE POST
-
-                       form.addEventListener("submit", function(event){
+                        // Post request
+                        form.addEventListener("submit", function(event){
                         event.preventDefault();
                         let formData = new FormData();
                         
-                        // récupérer le fichier, titre et catégorie du formulaire
+                        // get file, title and category
                         let fileInput = document.querySelector('input[type=file]');
                         let file = fileInput.files[0];
                         let title = document.querySelector('input[name=name]').value;
                         let category = document.querySelector('select[name=category]').value;
 
-                        // Valider les inputs
+                        // Validate inputs
                         if (!file) {
-                          alert("Sélectionnez une image");
-                          return;
+                            alert("Sélectionnez une image");
+                            return;
                         } else if (!title) {
                             alert("Entrez un titre");
                             return;
-                        } else if (!category) {
+                        } else if (category == "0") {
                             alert("Sélectionnez une catégorie");
                             return;
                         } 
                         
-                        
-                        
-
-                        
-
-                       
-                      
-                        // Récupérer le token
+                        // Get token
                         let getToken = localStorage.getItem('SavedToken');
                         let token = JSON.parse(getToken);
-                  
-                        // Création d'un formdata et ajout du fichier, titre et catégorie
+                    
+                        // Create formData and add file, title and category
                         formData.append('image', file, file.name);
                         formData.append('title', title);
                         formData.append('category', category);
-                      
-                        
-                       
-                        
+                    
                         let options = {
-                          method: "POST",
-                          headers: {
+                            method: "POST",
+                            headers: {
                             'Authorization': `Bearer ${token}`
-                          },
-                          body: formData
+                            },
+                            body: formData
                         };
-                      
-                        // Envoi de la requête au serveur
+                        
+                        
                         fetch(url, options)
-                          .then(response => {
+                            .then(response => {
                             if (!response.ok) {
-                              throw new Error(response.statusText);
+                                throw new Error(response.statusText);
                             }
                             return response.json();
-                          })
-                          .then(data => {
-                            console.log(data);
-                            alert("Votre image a été ajoutée avec succès !");
-                            //fileInput.value = null;
+                            })
+                            .then(data => {
+                                console.log(data);
+                                alert("Votre image a été ajoutée avec succès !");
+                                //fileInput.value = null;
 
-                            let figureData = document.createElement("figure");  
-                            figureData.setAttribute("id", data.id);
-                            figureData.setAttribute('data-category', `${data.categoryId}`);
-                
-                            let pictureData = document.createElement("img");
-                            pictureData.src = data.imageUrl;
-                            pictureData.setAttribute('alt', `${data.title}`);
-                            pictureData.setAttribute('crossorigin', 'anonymous');
-                            figureData.append(pictureData)
+                                let figureData = document.createElement("figure");  
+                                figureData.setAttribute("id", data.id);
+                                figureData.setAttribute('data-category', `${data.categoryId}`);
+                    
+                                let pictureData = document.createElement("img");
+                                pictureData.src = data.imageUrl;
+                                pictureData.setAttribute('alt', `${data.title}`);
+                                pictureData.setAttribute('crossorigin', 'anonymous');
+                                figureData.append(pictureData)
 
-                            let figcaptionData = document.createElement("figcaption");
-                            figcaptionData.textContent = data.title
-                            figureData.append(figcaptionData)
+                                let figcaptionData = document.createElement("figcaption");
+                                figcaptionData.textContent = data.title
+                                figureData.append(figcaptionData)
 
-                            gallery.append(figureData);
-
-
+                                gallery.append(figureData);
 
 
-                            modalContent.innerHTML = ""; //supprimer tout le contenu de la modal pour faire un fetch au click
-                            imgDiv.removeChild(img); // supprimer l'image chargée
-                            button.style.display = "block";
-                            text.style.display = "block";
-                            icon.style.display = "block";
-                            inputName.value = "";
-                            selectCategory.value = "";
+
+                                modalContent.innerHTML = ""; //supprimer tout le contenu de la modal pour faire un fetch au click
+                                imgForm.removeChild(img); // delete img
+                                buttonImage.style.display = "block";
+                                textImage.style.display = "block";
+                                iconImage.style.display = "block";
+                                inputName.value = "";
+                                selectCategory.value = "";                       
+                            })
                             
-                            
-                            
-                          })
-                          
-                          .catch(err => {
-                            console.log(err);
-                            alert("Erreur: " + err);
-                          });
-                      });
-                        
-                        }
-                    })
-                            
+                            .catch(err => {
+                                console.log(err);
+                                alert("Erreur: " + err);
+                            });
+                        });                   
+                    }
+                })                           
             })          
         })
     }       
@@ -464,20 +487,16 @@ btn.addEventListener("click", function(){
     
     
 
-// Fermer la modale en appuyant sur la croix
-span.addEventListener("click", function(){
+// close modal when clicking on X
+closeModal.addEventListener("click", function(){
     modal.style.display = "none";
-
 }) 
 
-
-
-
-// Fermez la modale lorsque l'utilisateur clique en dehors de celle-ci
+// Closing modal when clicking outside of it
 
 let btnPictureDelete = document.querySelector(".picture-delete")
 window.addEventListener("click", (event) => {
-    if (event.target === modal || event.target.closest('.modal-content') === modalContent || event.target.closest('.modal-content-2') === modalContentAdd || event.target === btn || event.target === btnPictureDelete || event.target === addPicture ) {
+    if (event.target === modal || event.target.closest('.modal-content') === modalContent || event.target.closest('.modal-content-2') === modalContentAdd || event.target === btnModal || event.target === btnPictureDelete || event.target === addPicture ) {
       return;
     }
     modal.style.display = "none";
@@ -485,9 +504,7 @@ window.addEventListener("click", (event) => {
   });
 
 
-
-
-  
+// Display modify buttons and bar when token
 const modify1 = document.querySelector(".button-modif-1");
 const modify2 = document.querySelector(".button-modif-2");
 const modify3 = document.querySelector(".button-modif-3");
@@ -504,3 +521,13 @@ if(localStorage.getItem("SavedToken")){
 }
 
 
+
+
+
+// function test(modalContent, project, ismodal)
+// Julien Canipel
+// 09:47
+// test(modalContent, project, true)
+// Julien Canipel
+// 09:47
+// test(modalContent, project, false)
