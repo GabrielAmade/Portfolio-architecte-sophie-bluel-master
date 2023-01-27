@@ -1,45 +1,53 @@
-
 //Get request
 const url = "http://localhost:5678/api/works";
 const gallery = document.querySelector(".gallery");
 const filterBtns = document.querySelectorAll(".filter-btn");
 
 
+function fetchProjects(url) {
     fetch(url)
         .then(res => {
             return res.json();
         })
         .then(data => {
             data.forEach(project => {
-    
-                let figure = document.createElement("figure");
-    
-                figure.setAttribute("id", project.id);
-                figure.setAttribute('data-category', `${project.categoryId}`);
-                               
-                let picture = document.createElement("img");
-                picture.src = project.imageUrl;
-                picture.setAttribute('alt', `${project.title}`);
-                picture.setAttribute('crossorigin', 'anonymous');
-                figure.append(picture)
-                
-                let figcaption = document.createElement("figcaption");
-                figcaption.textContent = project.title
-                figure.append(figcaption)
-    
-                gallery.appendChild(figure);
+                let myFigure = createFigure(project, project.title, false, false);
+                gallery.appendChild(myFigure);
 
                 //Filter function
-                filterBar(figure)
-                                        
-        }
-    )               
-})               
+                filterBar(myFigure);
+            });
+        })               
         .catch(error => console.log(error))
+}
+
+fetchProjects(url)
+
+function createFigure(project, captionContent, addFigCaptionClass, addPictureModalClass) {
+    let figure = document.createElement("figure");
+    figure.setAttribute("id", project.id);
+    figure.setAttribute('data-category', `${project.categoryId}`);
+
+    let picture = document.createElement("img");
+    picture.src = project.imageUrl;
+    picture.setAttribute('alt', `${project.title}`);
+    picture.setAttribute('crossorigin', 'anonymous');
+    figure.append(picture);
+
+    let figcaption = document.createElement("figcaption");
+    figcaption.textContent = captionContent;
+    if (addFigCaptionClass) {
+        figcaption.setAttribute("class", "figcaption-modal");
+    }
+    if (addPictureModalClass) {
+        picture.setAttribute("class", "picture-modal");
+    }
+    figure.append(figcaption);
+    return figure;
+}
 
 
 //Filter Buttons
-
 function filterBar(figure){
     filterBtns.forEach(function(btn) {
 
@@ -58,11 +66,34 @@ function filterBar(figure){
         })                  
     }
 )}
+
+
+// Display modify buttons and bar when token
+function displayBtnsIfToken(){
+    const modify1 = document.querySelector(".button-modif-1");
+    const modify2 = document.querySelector(".button-modif-2");
+    const modify3 = document.querySelector(".button-modif-3");
+    const editionBar = document.querySelector(".edition-bar")
+    const header = document.querySelector("header")
     
-  
+    if(localStorage.getItem("SavedToken")){
+        modify1.style.display = "block";
+        modify2.style.display = "block";
+        modify3.style.display = "block";
+        editionBar.style.display = "block";
+        header.style.marginTop = "70px"
+    }
+}
+displayBtnsIfToken()
 
-// Modal
 
+let token;
+function getToken() {
+    token = localStorage.getItem('SavedToken');
+    token = JSON.parse(token);
+}
+    
+// Create Modal
 let modal = document.querySelector("#myModal");
 let modalContent = document.querySelector(".modal-content");
 let modalContentAdd = document.querySelector(".modal-content-2")
@@ -74,88 +105,82 @@ let deletePicture = document.querySelector(".delete-picture")
 let hrModal = document.querySelector(".modal-hr")
 
 
-// let figure = function(project) {
-//     let figureModal = document.createElement("figure");   
-//     figureModal.setAttribute("id", project.id);
-//     figureModal.setAttribute('data-category', `${project.categoryId}`);
-// }
+function createModal(modalContent, project){
 
-function figureCreate(modalContent, project){
-    let figureModal = document.createElement("figure");   
-                figureModal.setAttribute("id", project.id);
-                figureModal.setAttribute('data-category', `${project.categoryId}`);
-                
-                // create picture
-                let pictureModal = document.createElement("img");
-                pictureModal.src = project.imageUrl;
-                pictureModal.setAttribute('alt', `${project.title}`);
-                pictureModal.setAttribute('crossorigin', 'anonymous');
-                pictureModal.setAttribute("class", "picture-modal");
-               
-                figureModal.append(pictureModal);
+    let myFigureModal = createFigure(project, "éditer", true, true);
 
-                // create delete button
-                let pictureDelete = document.createElement("button");
-                pictureDelete.setAttribute("class", "picture-delete")
+    // create delete button
+    let pictureDelete = document.createElement("button");
+    pictureDelete.setAttribute("class", "picture-delete")
 
-                //create trash icon
-                let iconTrash = document.createElement('i');
-                iconTrash.classList.add('fa-regular', 'fa-trash-can');
-                pictureDelete.style.position = 'relative';
-                pictureDelete.style.zIndex = '1';
-                pictureDelete.style.bottom = '105px';
-                pictureDelete.style.left = '58px';
-                pictureDelete.prepend(iconTrash);
-                figureModal.append(pictureDelete);
+    //create trash icon
+    let iconTrash = document.createElement('i');
+    iconTrash.classList.add('fa-regular', 'fa-trash-can');
+    pictureDelete.style.position = 'relative';
+    pictureDelete.style.zIndex = '1';
+    pictureDelete.style.bottom = '135px';
+    pictureDelete.style.left = '58px';
+    pictureDelete.prepend(iconTrash);
+    myFigureModal.append(pictureDelete);
 
-                // create caption
-                let figcaptionModal = document.createElement("figcaption");
-                figcaptionModal.textContent = "éditer";
-                figcaptionModal.setAttribute("class", "figcaption-modal");
-                figureModal.append(figcaptionModal)
-               
-                modalContent.appendChild(figureModal);
+    modalContent.appendChild(myFigureModal);
 
-                pictureDelete.addEventListener("click", function(){
-                    let getToken = localStorage.getItem('SavedToken');
-                    let token = JSON.parse(getToken);
-                    let id = this.parentElement.getAttribute("id");
-                    let urlDelete = `http://localhost:5678/api/works/${id}`;
-
-                    let optionDelete = {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': '*/*',
-                            'Authorization': `Bearer ${token}`,
-                        }
-                        };
-
-                        fetch(urlDelete, optionDelete)
-                        .then(response => {
-                            if (response.ok) {
-                                
-                                let modalFigure = document.querySelector(`figure[id="${id}"]`);
-                                modalFigure.remove();
-                                let figure = parent.document.querySelector(`figure[id="${id}"]`);
-                                figure.remove();
-
-                            } else {
-                                throw new Error('Erreur');
-                            }
-                        })
-
-                       .catch(error => {
-                            console.error(error);
-                        });
-                });
+    //Delete request
+    figureDelete(pictureDelete)
 }
 
 
+function figureDelete(pictureDelete){
+    pictureDelete.addEventListener("click", function(){
+        getToken();
+        let id = this.parentElement.getAttribute("id");
+        let urlDelete = `http://localhost:5678/api/works/${id}`;
+
+        let optionDelete = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*',
+                'Authorization': `Bearer ${token}`,
+            }
+            };
+
+            fetch(urlDelete, optionDelete)
+            .then(response => {
+                if (response.ok) {
+                    
+                    let modalFigure = document.querySelector(`figure[id="${id}"]`);
+                    modalFigure.remove();
+                    let figure = parent.document.querySelector(`figure[id="${id}"]`);
+                    figure.remove();
+
+                } else {
+                    throw new Error('Erreur');
+                }
+            })
+           .catch(error => {
+                console.error(error);
+            });
+    });
+}
+
+// close modal when clicking on X
+closeModal.addEventListener("click", function(){
+    modal.style.display = "none";
+}) 
 
 
-btnModal.addEventListener("click", function(){
+// Closing modal when clicking outside of it
+let btnPictureDelete = document.querySelector(".picture-delete")
+window.addEventListener("click", (event) => {
+    if (event.target === modal || event.target.closest('.modal-content') === modalContent || event.target.closest('.modal-content-2') === modalContentAdd || event.target === btnModal || event.target === btnPictureDelete || event.target === addPicture ) {
+      return;
+    }
+    modal.style.display = "none";
+});
 
+//Display modal
+function displayModal(){
     modal.style.display = "block";
     modalHeader.innerHTML = "<p>Galerie photo</p>"
     modalContentAdd.style.display = "none";
@@ -163,7 +188,138 @@ btnModal.addEventListener("click", function(){
     deletePicture.style.display = "block";
     hrModal.style.display = "block";
     modalContent.style.display = "block";
+}
 
+//Display modal to add a picture to the gallery
+function displayAddPicture(){
+    modalContent.style.display = "none";
+    modalContentAdd.style.display = "block";
+    addPicture.style.display = "none";
+    deletePicture.style.display = "none";
+    hrModal.style.display = "none";                  
+    modalHeader.innerHTML = "<p>Ajout photo</p>"
+}
+
+
+//Preview the picture you wanna add
+function previewImage(inputImage, imgForm, img, buttonImage, textImage, iconImage)
+{
+    inputImage.addEventListener("change", function(){
+        let file = this.files[0];
+        let reader = new FileReader();
+        reader.onload = function(e){
+            img.src = e.target.result;
+            img.className = "img-preview";
+            buttonImage.style.display = "none";
+            textImage.style.display = "none";
+            iconImage.style.display = "none";
+        }
+        reader.readAsDataURL(file);
+        imgForm.appendChild(img);
+    });
+}
+
+//Change the color of the submit button when all fields complete to add a picture
+function SubmitBtnChangeColor(inputSubmit){
+    let inputImageModal = document.querySelector("input[type='file']");
+    let inputNameModal = document.querySelector("input[name='name']");
+    let selectCategoryModal = document.querySelector("select[name='category']");
+    inputImageModal.addEventListener("change", checkInputs);
+    inputNameModal.addEventListener("keyup", checkInputs);
+    selectCategoryModal.addEventListener("change", checkInputs);
+
+    function checkInputs() {
+        if (inputImageModal.value && inputNameModal.value && (selectCategoryModal.value == "1" || selectCategoryModal.value == "2" || selectCategoryModal.value == "3")) {
+            inputSubmit.classList.remove("validate-picture-background")
+            inputSubmit.style.backgroundColor = "#1D6154";
+        } else {
+            inputSubmit.style.backgroundColor = "#A7A7A7";
+        }
+    }
+}
+
+
+//Post a new picture
+function postForm(form, imgForm, img, buttonImage, textImage, iconImage, inputName, selectCategory){
+    form.addEventListener("submit", function(event){
+        event.preventDefault();
+        let formData = new FormData();
+        
+        // get file, title and category
+        let fileInput = document.querySelector('input[type=file]');
+        let file = fileInput.files[0];
+        let title = document.querySelector('input[name=name]').value;
+        let category = document.querySelector('select[name=category]').value;
+
+        // Validate inputs
+        if (!file) {
+            alert("Sélectionnez une image");
+            return;
+        } else if (!title) {
+            alert("Entrez un titre");
+            return;
+        } else if (category == "0") {
+            alert("Sélectionnez une catégorie");
+            return;
+        } 
+        
+        getToken();
+    
+        // Create formData and add file, title and category
+        formData.append('image', file, file.name);
+        formData.append('title', title);
+        formData.append('category', category);
+    
+        let options = {
+            method: "POST",
+            headers: {
+            'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        };
+               
+        fetch(url, options)
+            .then(response => {
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+            return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                alert("Votre image a été ajoutée avec succès !");
+
+                let myFigureData = createFigure(data, data.title, false, false);
+
+                gallery.append(myFigureData);
+
+                cleanModal(modalContent,imgForm, img, buttonImage, textImage, iconImage, inputName, selectCategory)
+                    
+            })        
+            .catch(err => {
+                console.log(err);
+                alert("Erreur: " + err);
+            });
+        }); 
+}
+
+//clean the modal inputs after post processing succeded
+function cleanModal(modalContent,imgForm, img, buttonImage, textImage, iconImage, inputName, selectCategory){
+    modalContent.innerHTML = ""; //supprimer tout le contenu de la modal pour faire un fetch au click
+    imgForm.removeChild(img); // delete img
+    buttonImage.style.display = "block";
+    textImage.style.display = "block";
+    iconImage.style.display = "block";
+    inputName.value = "";
+    selectCategory.value = "";      
+}
+
+
+//Display modal when clicked
+btnModal.addEventListener("click", function(){
+
+    displayModal()
+    
     if (!modalContent.contains(document.querySelector(".picture-modal"))) {
      
         fetch(url)
@@ -173,91 +329,13 @@ btnModal.addEventListener("click", function(){
         .then(data => {
             data.forEach(project => {
     
-                // create figure
-                // let figureModal = document.createElement("figure");   
-                // figureModal.setAttribute("id", project.id);
-                // figureModal.setAttribute('data-category', `${project.categoryId}`);
-                
-                // // create picture
-                // let pictureModal = document.createElement("img");
-                // pictureModal.src = project.imageUrl;
-                // pictureModal.setAttribute('alt', `${project.title}`);
-                // pictureModal.setAttribute('crossorigin', 'anonymous');
-                // pictureModal.setAttribute("class", "picture-modal");
-               
-                // figureModal.append(pictureModal);
-
-                // // create delete button
-                // let pictureDelete = document.createElement("button");
-                // pictureDelete.setAttribute("class", "picture-delete")
-
-                // //create trash icon
-                // let iconTrash = document.createElement('i');
-                // iconTrash.classList.add('fa-regular', 'fa-trash-can');
-                // pictureDelete.style.position = 'relative';
-                // pictureDelete.style.zIndex = '1';
-                // pictureDelete.style.bottom = '105px';
-                // pictureDelete.style.left = '58px';
-                // pictureDelete.prepend(iconTrash);
-                // figureModal.append(pictureDelete);
-
-                // // create caption
-                // let figcaptionModal = document.createElement("figcaption");
-                // figcaptionModal.textContent = "éditer";
-                // figcaptionModal.setAttribute("class", "figcaption-modal");
-                // figureModal.append(figcaptionModal)
-               
-                // modalContent.appendChild(figureModal);
-
-                figureCreate(modalContent, project);
+                createModal(modalContent, project);
 
 
-               // Delete request
-                // pictureDelete.addEventListener("click", function(){
-                //     let getToken = localStorage.getItem('SavedToken');
-                //     let token = JSON.parse(getToken);
-                //     let id = this.parentElement.getAttribute("id");
-                //     let urlDelete = `http://localhost:5678/api/works/${id}`;
-
-                //     let optionDelete = {
-                //         method: 'DELETE',
-                //         headers: {
-                //             'Content-Type': 'application/json',
-                //             'Accept': '*/*',
-                //             'Authorization': `Bearer ${token}`,
-                //         }
-                //         };
-
-                //         fetch(urlDelete, optionDelete)
-                //         .then(response => {
-                //             if (response.ok) {
-                                
-                //                 let modalFigure = document.querySelector(`figure[id="${id}"]`);
-                //                 modalFigure.remove();
-                //                 let figure = parent.document.querySelector(`figure[id="${id}"]`);
-                //                 figure.remove();
-
-                //             } else {
-                //                 throw new Error('Erreur');
-                //             }
-                //         })
-
-                //        .catch(error => {
-                //             console.error(error);
-                //         });
-                // });
-
-
-                //Post form
-
+                //Create form
                 addPicture.addEventListener("click", function(){    
 
-                    modalContent.style.display = "none";
-                    modalContentAdd.style.display = "block";
-                    addPicture.style.display = "none";
-                    deletePicture.style.display = "none";
-                    hrModal.style.display = "none";                  
-                    modalHeader.innerHTML = "<p>Ajout photo</p>"
+                    displayAddPicture()
                     
                     if (!modalContentAdd.contains(document.querySelector("form"))) {
 
@@ -301,23 +379,11 @@ btnModal.addEventListener("click", function(){
 
 
                         // Preview image 
-                        inputImage.addEventListener("change", function(){
-                            let file = this.files[0];
-                            let reader = new FileReader();
-                            reader.onload = function(e){
-                                img.src = e.target.result;
-                                img.className = "img-preview";
-                                buttonImage.style.display = "none";
-                                textImage.style.display = "none";
-                                iconImage.style.display = "none";
-                            }
-                            reader.readAsDataURL(file);
-                            imgForm.appendChild(img);
-                        });
-
+                        previewImage(inputImage, imgForm, img, buttonImage, textImage, iconImage)
 
                         form.appendChild(imgForm);
                         
+
                         // Name Input
                         let labelName = document.createElement("label");
                         labelName.innerHTML = "Titre";
@@ -340,8 +406,6 @@ btnModal.addEventListener("click", function(){
                         selectCategory.setAttribute("name", "category");
                         selectCategory.setAttribute("id", "select-category");
                         form.appendChild(selectCategory);
-
-
 
                         // Select options
                         let option1 = document.createElement("option");
@@ -373,111 +437,13 @@ btnModal.addEventListener("click", function(){
                         form.appendChild(inputSubmit);
                         modalContentAdd.appendChild(form);
                         modal.appendChild(modalContentAdd);
-                  
-                        
+                                         
                         // Change color of submit btn when inputs complete
-                        let inputImageTest = document.querySelector("input[type='file']");
-                        let inputNameTest = document.querySelector("input[name='name']");
-                        let selectCategoryTest = document.querySelector("select[name='category']");
-                        inputImageTest.addEventListener("change", checkInputs);
-                        inputNameTest.addEventListener("keyup", checkInputs);
-                        selectCategoryTest.addEventListener("change", checkInputs);
-
-                        function checkInputs() {
-                            if (inputImageTest.value && inputNameTest.value && (selectCategoryTest.value == "1" || selectCategoryTest.value == "2" || selectCategoryTest.value == "3")) {
-                                inputSubmit.classList.remove("validate-picture-background")
-                                inputSubmit.style.backgroundColor = "#1D6154";
-                            } else {
-                                inputSubmit.style.backgroundColor = "#A7A7A7";
-                            }
-                        }
-
+                        SubmitBtnChangeColor(inputSubmit)
 
                         // Post request
-                        form.addEventListener("submit", function(event){
-                        event.preventDefault();
-                        let formData = new FormData();
-                        
-                        // get file, title and category
-                        let fileInput = document.querySelector('input[type=file]');
-                        let file = fileInput.files[0];
-                        let title = document.querySelector('input[name=name]').value;
-                        let category = document.querySelector('select[name=category]').value;
-
-                        // Validate inputs
-                        if (!file) {
-                            alert("Sélectionnez une image");
-                            return;
-                        } else if (!title) {
-                            alert("Entrez un titre");
-                            return;
-                        } else if (category == "0") {
-                            alert("Sélectionnez une catégorie");
-                            return;
-                        } 
-                        
-                        // Get token
-                        let getToken = localStorage.getItem('SavedToken');
-                        let token = JSON.parse(getToken);
-                    
-                        // Create formData and add file, title and category
-                        formData.append('image', file, file.name);
-                        formData.append('title', title);
-                        formData.append('category', category);
-                    
-                        let options = {
-                            method: "POST",
-                            headers: {
-                            'Authorization': `Bearer ${token}`
-                            },
-                            body: formData
-                        };
-                        
-                        
-                        fetch(url, options)
-                            .then(response => {
-                            if (!response.ok) {
-                                throw new Error(response.statusText);
-                            }
-                            return response.json();
-                            })
-                            .then(data => {
-                                console.log(data);
-                                alert("Votre image a été ajoutée avec succès !");
-                                //fileInput.value = null;
-
-                                let figureData = document.createElement("figure");  
-                                figureData.setAttribute("id", data.id);
-                                figureData.setAttribute('data-category', `${data.categoryId}`);
-                    
-                                let pictureData = document.createElement("img");
-                                pictureData.src = data.imageUrl;
-                                pictureData.setAttribute('alt', `${data.title}`);
-                                pictureData.setAttribute('crossorigin', 'anonymous');
-                                figureData.append(pictureData)
-
-                                let figcaptionData = document.createElement("figcaption");
-                                figcaptionData.textContent = data.title
-                                figureData.append(figcaptionData)
-
-                                gallery.append(figureData);
-
-
-
-                                modalContent.innerHTML = ""; //supprimer tout le contenu de la modal pour faire un fetch au click
-                                imgForm.removeChild(img); // delete img
-                                buttonImage.style.display = "block";
-                                textImage.style.display = "block";
-                                iconImage.style.display = "block";
-                                inputName.value = "";
-                                selectCategory.value = "";                       
-                            })
-                            
-                            .catch(err => {
-                                console.log(err);
-                                alert("Erreur: " + err);
-                            });
-                        });                   
+                        postForm(form, imgForm, img, buttonImage, textImage, iconImage, inputName, selectCategory)
+                                          
                     }
                 })                           
             })          
@@ -485,49 +451,3 @@ btnModal.addEventListener("click", function(){
     }       
 }) 
     
-    
-
-// close modal when clicking on X
-closeModal.addEventListener("click", function(){
-    modal.style.display = "none";
-}) 
-
-// Closing modal when clicking outside of it
-
-let btnPictureDelete = document.querySelector(".picture-delete")
-window.addEventListener("click", (event) => {
-    if (event.target === modal || event.target.closest('.modal-content') === modalContent || event.target.closest('.modal-content-2') === modalContentAdd || event.target === btnModal || event.target === btnPictureDelete || event.target === addPicture ) {
-      return;
-    }
-    modal.style.display = "none";
-
-  });
-
-
-// Display modify buttons and bar when token
-const modify1 = document.querySelector(".button-modif-1");
-const modify2 = document.querySelector(".button-modif-2");
-const modify3 = document.querySelector(".button-modif-3");
-const editionBar = document.querySelector(".edition-bar")
-const header = document.querySelector("header")
-
-if(localStorage.getItem("SavedToken")){
-
-    modify1.style.display = "block";
-    modify2.style.display = "block";
-    modify3.style.display = "block";
-    editionBar.style.display = "block";
-    header.style.marginTop = "70px"
-}
-
-
-
-
-
-// function test(modalContent, project, ismodal)
-// Julien Canipel
-// 09:47
-// test(modalContent, project, true)
-// Julien Canipel
-// 09:47
-// test(modalContent, project, false)
