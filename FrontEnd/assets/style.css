@@ -416,9 +416,10 @@ footer nav ul {
 }
 
 .img-preview {
-    /* object-fit: contain!important;
-    object-position: center!important; */
-	width: 125px!important;
+	max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center;
 }
 
 

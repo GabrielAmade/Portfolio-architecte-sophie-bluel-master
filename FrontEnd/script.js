@@ -55,7 +55,7 @@ function filterBar(figure){
             const btnId = (e.target.dataset.id);
             //console.log(btnId); //me donne le data-id de mon bouton
             const figureId = figure.getAttribute("data-category")
-            //console.log(figureId);                      
+            
             if(btnId === figureId) {
                 figure.style.display = "block";
             } else if (btnId === "0"){
@@ -171,13 +171,15 @@ closeModal.addEventListener("click", function(){
 
 
 // Closing modal when clicking outside of it
-let btnPictureDelete = document.querySelector(".picture-delete")
 window.addEventListener("click", (event) => {
-    if (event.target === modal || event.target.closest('.modal-content') === modalContent || event.target.closest('.modal-content-2') === modalContentAdd || event.target === btnModal || event.target === btnPictureDelete || event.target === addPicture ) {
-      return;
-    }
+    if (event.target === btnModal || modal.contains(event.target)) {
+    modal.style.display = "block";
+    } else {
     modal.style.display = "none";
+    }
 });
+
+
 
 //Display modal
 function displayModal(){
