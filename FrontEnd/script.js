@@ -53,9 +53,9 @@ function filterBar(figure){
 
         btn.addEventListener("click", (e) => {
             const btnId = (e.target.dataset.id);
-            //console.log(btnId); //me donne le data-id de mon bouton
+            console.log(btnId); //me donne le data-id de mon bouton
             const figureId = figure.getAttribute("data-category")
-            
+            //console.log(figureId);
             if(btnId === figureId) {
                 figure.style.display = "block";
             } else if (btnId === "0"){
@@ -172,7 +172,7 @@ closeModal.addEventListener("click", function(){
 
 // Closing modal when clicking outside of it
 window.addEventListener("click", (event) => {
-    if (event.target === btnModal || modal.contains(event.target)) {
+    if (event.target === btnModal || modal.contains(event.target) && event.target !== closeModal) {
     modal.style.display = "block";
     } else {
     modal.style.display = "none";
@@ -288,7 +288,7 @@ function postForm(form, imgForm, img, buttonImage, textImage, iconImage, inputNa
             return response.json();
             })
             .then(data => {
-                console.log(data);
+                //console.log(data);
                 alert("Votre image a été ajoutée avec succès !");
 
                 let myFigureData = createFigure(data, data.title, false, false);
@@ -305,7 +305,7 @@ function postForm(form, imgForm, img, buttonImage, textImage, iconImage, inputNa
         }); 
 }
 
-//clean the modal inputs after post processing succeded
+//clean the modal inputs after post success
 function cleanModal(modalContent,imgForm, img, buttonImage, textImage, iconImage, inputName, selectCategory){
     modalContent.innerHTML = ""; //supprimer tout le contenu de la modal pour faire un fetch au click
     imgForm.removeChild(img); // delete img

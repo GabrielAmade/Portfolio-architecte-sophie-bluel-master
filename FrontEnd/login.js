@@ -6,7 +6,6 @@ const password = document.querySelector("#password");
 
 
 
-
 btnSubmit.addEventListener("click", function(){
 
         
