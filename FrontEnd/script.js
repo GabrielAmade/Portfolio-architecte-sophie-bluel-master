@@ -1,7 +1,6 @@
 //Get request
 const url = "http://localhost:5678/api/works";
 const gallery = document.querySelector(".gallery");
-const filterBtns = document.querySelectorAll(".filter-btn");
 
 
 function fetchProjects(url) {
@@ -15,6 +14,7 @@ function fetchProjects(url) {
                 gallery.appendChild(myFigure);
 
                 //Filter function
+                createFilterButtons()
                 filterBar(myFigure);
             });
         })               
@@ -47,25 +47,52 @@ function createFigure(project, captionContent, addFigCaptionClass, addPictureMod
 }
 
 
-//Filter Buttons
-function filterBar(figure){
-    filterBtns.forEach(function(btn) {
 
-        btn.addEventListener("click", (e) => {
-            const btnId = (e.target.dataset.id);
-            console.log(btnId); //me donne le data-id de mon bouton
-            const figureId = figure.getAttribute("data-category")
-            //console.log(figureId);
-            if(btnId === figureId) {
-                figure.style.display = "block";
-            } else if (btnId === "0"){
-                figure.style.display = "block";
-            } else (
-                figure.style.display = "none"
-            )                                             
-        })                  
-    }
-)}
+// Create Filter Buttons
+function createFilterButtons() {
+    const buttons = [
+      { id: 0, text: "Tous" },
+      { id: 1, text: "Objets" },
+      { id: 2, text: "Appartements" },
+      { id: 3, text: "Hôtels & restaurants" }
+    ];
+    
+    const buttonElements = buttons.map(({ id, text }) => {
+      const button = document.createElement("button");
+      button.classList.add("filter-btn");
+      button.setAttribute("data-id", id);
+      button.textContent = text;
+      return button;
+    });
+    
+    return buttonElements;
+  }
+  
+
+
+  const filter = document.querySelector(".filter");
+  const buttons = createFilterButtons();
+  buttons.forEach(button => filter.appendChild(button));
+  
+  const filterBtns = document.querySelectorAll(".filter-btn");
+
+//Filter Buttons
+function filterBar(figure) {
+    filterBtns.forEach(function(btn) {
+      btn.addEventListener("click", e => {
+        const btnId = e.target.dataset.id;
+        const figureId = figure.getAttribute("data-category");
+
+        if (btnId === figureId) {
+          figure.style.display = "block";
+        } else if (btnId === "0") {
+          figure.style.display = "block";
+        } else {
+          figure.style.display = "none";
+        }
+      });
+    });
+  }
 
 
 // Display modify buttons and bar when token
@@ -75,6 +102,7 @@ function displayBtnsIfToken(){
     const modify3 = document.querySelector(".button-modif-3");
     const editionBar = document.querySelector(".edition-bar")
     const header = document.querySelector("header")
+    const login = document.querySelector(".login")
     
     if(localStorage.getItem("SavedToken")){
         modify1.style.display = "block";
@@ -82,6 +110,7 @@ function displayBtnsIfToken(){
         modify3.style.display = "block";
         editionBar.style.display = "block";
         header.style.marginTop = "70px"
+        login.textContent = "logout"
     }
 }
 displayBtnsIfToken()

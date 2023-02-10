@@ -7,7 +7,7 @@ const password = document.querySelector("#password");
 
 
 btnSubmit.addEventListener("click", function(){
-
+console.log("test");
         
             const userId = {
                  email: email.value,
@@ -45,3 +45,5 @@ btnSubmit.addEventListener("click", function(){
         
    
 
+
+        
