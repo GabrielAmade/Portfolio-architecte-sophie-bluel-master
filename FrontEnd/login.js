@@ -24,7 +24,7 @@ console.log("test");
             })
             .then(res => {
                 if (res.ok){
-                    window.location.href = 'http://127.0.0.1:5501/index.html'
+                    window.location.href = './index.html'
                    
                 } else {
                     error.textContent = "Erreur dans l’identifiant ou le mot de passe"
